@@ -16,5 +16,8 @@ return require('packer').startup(function(use)
 	}
 	use 'mbbill/undotree'
 	use 'neovim/nvim-lspconfig'
+	use 'nvim-treesitter/nvim-treesitter'
+	use 'nvim-treesitter/nvim-treesitter-context'
+	use 'ThePrimeagen/harpoon'
 	end)
 

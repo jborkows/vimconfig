@@ -26,6 +26,9 @@ nnoremap("<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<cr>")
 nnoremap("<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<cr>")
 nnoremap("<F5>",":UndotreeToggle<CR>")
 
+nnoremap("<leader>ca", "<cmd>lua require('harpoon.mark').add_file()<cr>")
+nnoremap("<leader>cw", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>")
+
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
