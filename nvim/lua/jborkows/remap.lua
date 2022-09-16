@@ -18,7 +18,8 @@ nnoremap  <silent> ]b :bnext<CR>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 ]]
 local nnoremap = require("jborkows.keymap").nnoremap
-
+local inoremap = require("jborkows.keymap").inoremap
+inoremap("{<cr>","<ESC>A{<cr>}<ESC>ko")
 nnoremap("<leader>pv", "<cmd>Ex<CR>")
 nnoremap("<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>")
 nnoremap("<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<cr>")
@@ -72,3 +73,11 @@ require('lspconfig')['yamlls'].setup{
 		}
 	}
 }
+
+vim.cmd [[
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
+au filetype go inoremap <buffer> . .<C-x><C-o>
+noremap <F10> :copen 40<cr>
+]]
