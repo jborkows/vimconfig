@@ -8,3 +8,4 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_operators = 1
  ]]
 
+require('telescope').setup{ defaults = { file_ignore_patterns = {"class", "build"} } } 
