@@ -19,7 +19,10 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 ]]
 local nnoremap = require("jborkows.keymap").nnoremap
 local inoremap = require("jborkows.keymap").inoremap
-inoremap("{<cr>","<ESC>A{<cr>}<ESC>ko")
+inoremap("{","<ESC>A{<cr>}<ESC>ko")
+inoremap("(","(<space><space>)<ESC>hha")
+inoremap("\"","\"\"<ESC>ha")
+nnoremap("<leader>d", "\"_d")
 nnoremap("<leader>pv", "<cmd>Ex<CR>")
 nnoremap("<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>")
 nnoremap("<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<cr>")
@@ -57,9 +60,11 @@ local on_attach = function(client, bufnr)
   end, bufopts)
   vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<space>la', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+  vim.keymap.set('n', '<leader>ld', vim.diagnostic.goto_next, bufopts)
+  vim.keymap.set('n', '<leader>lt', "<cmd>Telescope diagnostics<cr>", bufopts)
 end
 
 local lsp_flags = {
@@ -78,6 +83,10 @@ vim.cmd [[
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
-au filetype go inoremap <buffer> . .<C-x><C-o>
+" au filetype go inoremap <buffer> . .<C-x><C-o>
 noremap <F10> :copen 40<cr>
+let g:go_debug_windows = {
+      \ 'vars':       'rightbelow 90vnew',
+      \ 'stack':      'rightbelow 10new',
+\ }
 ]]
