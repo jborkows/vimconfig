@@ -5,7 +5,7 @@ cp -r $SCRIPT_DIR/* $GIT_DIR
 pushd $GIT_DIR
 git add .
 git commit -m "${1:changes}"
-git show -1
+git log --name-only HEAD^..HEAD | cat
 popd
 
 
