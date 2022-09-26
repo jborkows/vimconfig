@@ -23,6 +23,7 @@ set spell
 set spelllang=en_us
 set autoindent
 set signcolumn=yes
+set completeopt=menu,menuone,noselect
 ]]
 vim.opt.scrolloff=8
 vim.opt.colorcolumn="80"

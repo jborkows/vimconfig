@@ -6,7 +6,6 @@ return require('packer').startup(function(use)
 	use  'nvim-lua/plenary.nvim'
 	use  'BurntSushi/ripgrep'
 	use 'nvim-telescope/telescope.nvim'
-	use {'fatih/vim-go', run = ':GoUpdateBinaries'}
 	use {
 		"ThePrimeagen/refactoring.nvim",
 		requires = {
@@ -19,5 +18,20 @@ return require('packer').startup(function(use)
 	use 'nvim-treesitter/nvim-treesitter'
 	use 'nvim-treesitter/nvim-treesitter-context'
 	use 'ThePrimeagen/harpoon'
+
+-- Installation
+	use 'hrsh7th/cmp-nvim-lsp'
+	use 'hrsh7th/cmp-buffer'
+	use 'hrsh7th/cmp-path'
+	use 'hrsh7th/cmp-cmdline'
+	use 'hrsh7th/nvim-cmp'
+	use 'L3MON4D3/LuaSnip'
+	use 'saadparwaiz1/cmp_luasnip'
+	-- go.nvim
+	use 'ray-x/go.nvim'
+	use 'ray-x/guihua.lua' -- recommanded if need floating window support
+	use 'mfussenegger/nvim-dap'
+	use 'rcarriga/nvim-dap-ui'
+	use 'theHamsta/nvim-dap-virtual-text'
 	end)
 

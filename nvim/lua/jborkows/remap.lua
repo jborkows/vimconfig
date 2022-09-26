@@ -41,7 +41,7 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -79,14 +79,129 @@ require('lspconfig')['yamlls'].setup{
 	}
 }
 
-vim.cmd [[
-autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-autocmd FileType go nmap <leader>t  <Plug>(go-test)
-" au filetype go inoremap <buffer> . .<C-x><C-o>
-noremap <F10> :copen 40<cr>
-let g:go_debug_windows = {
-      \ 'vars':       'rightbelow 90vnew',
-      \ 'stack':      'rightbelow 10new',
-\ }
+-- vim-go
+--vim.cmd [[
+--autocmd FileType go nmap <leader>b  <Plug>(go-build)
+--autocmd FileType go nmap <leader>r  <Plug>(go-run)
+--autocmd FileType go nmap <leader>t  <Plug>(go-test)
+--" au filetype go inoremap <buffer> . .<C-x><C-o>
+--noremap <F10> :copen 40<cr>
+--let g:go_debug_windows = {
+      --\ 'vars':       'rightbelow 90vnew',
+      --\ 'stack':      'rightbelow 10new',
+--\ }
+--]]
+
+-- cmp
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local luasnip = require("luasnip")
+local cmp = require("cmp")
+
+cmp.setup({
+
+  -- ... Your other configuration ...
+
+ snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        --vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+  mapping = {
+
+    -- ... Your other mappings ...
+
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+
+    -- ... Your other mappings ...
+  },
+
+  sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+     -- { name = 'vsnip' }, -- For vsnip users.
+      { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  -- ... Your other configuration ...
+})
+
+-- go.nvim
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+require 'go'.setup({
+  goimport = 'gopls', -- if set to 'gopls' will use golsp format
+  gofmt = 'gofumpt', -- if set to gopls will use golsp format
+  max_line_len = 120,
+  tag_transform = false,
+  test_dir = '',
+  comment_placeholder = '   ',
+  lsp_cfg = {
+	   capabilities = capabilities
+  },
+  lsp_gofumpt = true, -- true: set default gofmt in gopls format to gofumpt
+  lsp_on_attach = true, -- use on_attach from go.nvim
+  dap_debug = true,
+})
+
+vim.cmd[[
+autocmd FileType go nmap <Leader>gc :lua require('go.comment').gen()<cr>
+autocmd FileType go nmap <leader>b  :GoBuild<cr>
+autocmd FileType go nmap <leader>r  :GoRun<cr>
+autocmd FileType go nmap <leader>t  :GoTest<cr>
 ]]
+
+-- lua
+local runtime_path = vim.split(package.path, ";")
+table.insert(runtime_path, "lua/?.lua")
+table.insert(runtime_path, "lua/?/init.lua")
+require'lspconfig'.sumneko_lua.setup {
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}
