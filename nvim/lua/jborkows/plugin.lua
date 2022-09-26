@@ -20,7 +20,9 @@ return require('packer').startup(function(use)
 	use 'nvim-treesitter/nvim-treesitter-context'
 	use 'ThePrimeagen/harpoon'
 
--- Installation
+	use 'tpope/vim-commentary'
+
+-- Installation nvim lsp
 	use 'hrsh7th/cmp-nvim-lsp'
 	use 'hrsh7th/cmp-buffer'
 	use 'hrsh7th/cmp-path'

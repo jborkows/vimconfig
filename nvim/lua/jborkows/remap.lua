@@ -205,3 +205,8 @@ require'lspconfig'.sumneko_lua.setup {
     },
   },
 }
+
+-- bash language server
+require( 'lspconfig' ).bashls.setup{
+
+}
